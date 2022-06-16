@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AndroidArch</string>
+
+
+    <string name="icn_camera_view_switch_camera_content_description">AndroidArch</string>
+    <string name="icn_camera_view_camera_shutter_content_description">ajsd</string>
+    <string name="icn_camera_view_view_gallery_content_description">jsalkd</string>
+
+    <string name="clear_all">Clear All</string>
+    <string name="notification">Notification</string>
+</resources>

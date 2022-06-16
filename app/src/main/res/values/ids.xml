@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="capture_nid_front" />
+    <item type="id" name="capture_nid_back" />
+
+    <item type="id" name="scan_qr" />
+    <item type="id" name="program_details" />
+    <item type="id" name="history" />
+    <item type="id" name="claim" />
+
+    <item type="id" name="search_menu" />
+    <item type="id" name="calendar_menu" />
+
+    <item type="id" name="clear_all_menu" />
+
+</resources>
