@@ -45,7 +45,7 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
     LaunchedEffect(key1 = true) {
         startAnimation = true
 
-        splashViewModel.getConfigurations2().collect {
+        splashViewModel.getConfigurations().collect {
             when (it) {
                 is NetworkState.Loading -> {
                     context.showProgressBar()
@@ -64,15 +64,12 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
                     navigator?.let { gotoNextScreen(it) }
                 }
                 is NetworkState.Error -> {
-
                     context.showToast(it.exception.errorMessage ?: "")
+
                     context.hideProgressBar()
                 }
             }
-
         }
-
-
     }
 
     Splash(alpha = alphaAnim.value)

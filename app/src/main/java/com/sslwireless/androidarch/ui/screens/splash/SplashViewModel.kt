@@ -9,8 +9,5 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(var moviesRepo: IMoviesRepository) : BaseViewModel() {
     suspend fun getConfigurations() =
-        baseApiCall(NetworkState.Data(moviesRepo.fetchConfigurations()))
-
-    suspend fun getConfigurations2() =
         moviesRepo.fetchConfigurations2()
 }

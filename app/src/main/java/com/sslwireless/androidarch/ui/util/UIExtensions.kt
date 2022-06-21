@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker
 import android.widget.Toast
+import com.sslwireless.androidarch.ui.base.BaseActivity
 import com.sslwireless.androidarch.ui.main.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,7 +49,15 @@ fun Context.hideProgressBar() = run {
 
 fun Context.forceLogout() = run {
     try {
-        (this as MainActivity).viewModel.shouldLogout = true
+        (this as MainActivity).viewModel.forceLogout()
+    } catch (e: Exception) {
+        this.showToast(e.message.toString())
+    }
+}
+
+fun Context.changeLanguage(locale: Locale, isActivityRestart: Boolean = true) = run {
+    try {
+        (this as BaseActivity).updateLocale(locale, isActivityRestart)
     } catch (e: Exception) {
         this.showToast(e.message.toString())
     }

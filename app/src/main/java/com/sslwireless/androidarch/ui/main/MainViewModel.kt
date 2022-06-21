@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor() : BaseViewModel() {
-    var showProgressBar by mutableStateOf(false)
 
-    var shouldLogout by mutableStateOf(false)
+
 }
