@@ -53,28 +53,21 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
                 is NetworkState.Data -> {
                     delay(animationTimeout.toLong())
 
-                    it.data.images?.base_url?.let { it1 ->
-                        splashViewModel.moviesRepo.cacheImageBaseUrl(
-                            it1
-                        )
-                    }
-
                     context.hideProgressBar()
 
+                    val data = it.data
                     navigator?.let { gotoNextScreen(it) }
                 }
                 is NetworkState.Error -> {
-                    context.showToast(it.exception.errorMessage ?: "")
-
                     context.hideProgressBar()
+
+                    context.showToast(it.exception.errorMessage ?: "Something went wrong!")
                 }
             }
         }
     }
 
     Splash(alpha = alphaAnim.value)
-
-
 }
 
 private fun gotoNextScreen(navigator: DestinationsNavigator) {

@@ -49,21 +49,3 @@ fun DottedRectangle(
         )
     }
 }
-
-@Composable
-fun ProgressBarHandler(show: Boolean) {
-    if (!show) return
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .wrapContentHeight()
-                .align(Alignment.Center)
-        )
-
-    }
-}

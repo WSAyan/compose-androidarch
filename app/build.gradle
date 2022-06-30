@@ -55,13 +55,13 @@ android {
     productFlavors {
         demo {
             dimension "version"
-            buildConfigField "String", "SERVER_URL", '"http://api.themoviedb.org/"'
+            buildConfigField "String", "SERVER_URL", '" https://hris.sslwireless.com/api/v1/"'
             buildConfigField "String", "API_KEY", properties.getProperty("api_key", "")
             versionNameSuffix "-demo"
         }
         live {
             dimension "version"
-            buildConfigField "String", "SERVER_URL", '"http://api.themoviedb.org/"'
+            buildConfigField "String", "SERVER_URL", '" https://hris.sslwireless.com/api/v1/"'
             buildConfigField "String", "API_KEY", properties.getProperty("api_key", "")
             versionNameSuffix "-live"
         }

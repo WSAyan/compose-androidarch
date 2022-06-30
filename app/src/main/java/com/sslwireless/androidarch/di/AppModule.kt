@@ -37,7 +37,7 @@ object AppModule {
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization", "")
+                    .addHeader("Authorization", "Bearer ${BuildConfig.API_KEY}")
 
                 chain.proceed(request.build())
             }.addInterceptor(httpLoggingInterceptor).build()

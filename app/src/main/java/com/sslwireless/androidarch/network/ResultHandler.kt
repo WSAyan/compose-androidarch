@@ -25,7 +25,7 @@ sealed class NetworkState<out T> {
 open class NetworkErrorExceptions(
     val errorCode: Int = -1,
     val errorMessageRes: Int? = null,
-    val errorMessage: String,
+    val errorMessage: String? = "Something went wrong!",
     val errorBody: BaseResponse? = null,
     val unauthorized: Boolean = false
 ) : Exception() {
@@ -92,7 +92,7 @@ fun Exception.resolveError(): NetworkState.Error {
     }
 
     return NetworkState.Error(
-        exception = NetworkErrorExceptions(errorMessage = "Something went wrong!"),
+        exception = NetworkErrorExceptions(),
         errorBody = null,
         unauthorized = false
     )

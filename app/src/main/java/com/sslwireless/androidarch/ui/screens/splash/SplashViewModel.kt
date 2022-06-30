@@ -1,13 +1,12 @@
 package com.sslwireless.androidarch.ui.screens.splash
 
-import com.sslwireless.androidarch.network.NetworkState
-import com.sslwireless.androidarch.repo.IMoviesRepository
+import com.sslwireless.androidarch.repo.IDonorsRepository
 import com.sslwireless.androidarch.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(var moviesRepo: IMoviesRepository) : BaseViewModel() {
+class SplashViewModel @Inject constructor(var moviesRepo: IDonorsRepository) : BaseViewModel() {
     suspend fun getConfigurations() =
-        moviesRepo.fetchConfigurations2()
+        moviesRepo.fetchConfigurations()
 }

@@ -30,8 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.R
-import com.sslwireless.androidarch.ui.screens.destinations.PhoneNumberScreenDestination
-import com.sslwireless.androidarch.ui.screens.destinations.RegistrationScreenDestination
+import com.sslwireless.androidarch.ui.screens.destinations.DonorsScreenDestination
 import com.sslwireless.androidarch.ui.theme.NipponCANTheme
 import com.sslwireless.androidarch.ui.theme.SlateGrey
 import com.sslwireless.androidarch.ui.theme.Typography
@@ -151,7 +150,7 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
                             backgroundColor = MaterialTheme.colors.primary
                         ),
                         onClick = {
-                            navigator?.navigate(RegistrationScreenDestination())
+                            navigator?.navigate(direction = DonorsScreenDestination())
                         },
                     ) {
                         Text("LOGIN", style = Typography.button)
@@ -175,7 +174,7 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                navigator?.navigate(direction = PhoneNumberScreenDestination())
+
                             },
                         textAlign = TextAlign.Center,
                     )
