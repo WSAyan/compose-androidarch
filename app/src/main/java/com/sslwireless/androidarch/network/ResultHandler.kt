@@ -10,16 +10,16 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.reflect.KClass
 
-sealed class NetworkState<out T> {
-    object Loading : NetworkState<Nothing>()
+sealed class AppNetworkState<out T> {
+    object Loading : AppNetworkState<Nothing>()
 
     data class Error(
         var exception: NetworkErrorExceptions,
         var errorBody: BaseResponse? = null,
         var unauthorized: Boolean = false
-    ) : NetworkState<Nothing>()
+    ) : AppNetworkState<Nothing>()
 
-    data class Data<T>(var data: T) : NetworkState<T>()
+    data class Data<T>(var data: T) : AppNetworkState<T>()
 }
 
 open class NetworkErrorExceptions(
@@ -55,11 +55,11 @@ open class NetworkErrorExceptions(
     }
 }
 
-fun Exception.resolveError(): NetworkState.Error {
+fun Exception.resolveError(): AppNetworkState.Error {
     when (this) {
         is SocketTimeoutException -> {
             val exception = NetworkErrorExceptions(errorMessage = "connection error!")
-            return NetworkState.Error(
+            return AppNetworkState.Error(
                 exception = exception,
                 errorBody = exception.errorBody,
                 unauthorized = exception.unauthorized
@@ -67,7 +67,7 @@ fun Exception.resolveError(): NetworkState.Error {
         }
         is ConnectException -> {
             val exception = NetworkErrorExceptions(errorMessage = "no internet access!")
-            return NetworkState.Error(
+            return AppNetworkState.Error(
                 exception = exception,
                 errorBody = exception.errorBody,
                 unauthorized = exception.unauthorized
@@ -75,7 +75,7 @@ fun Exception.resolveError(): NetworkState.Error {
         }
         is UnknownHostException -> {
             val exception = NetworkErrorExceptions(errorMessage = "no internet access!")
-            return NetworkState.Error(
+            return AppNetworkState.Error(
                 exception = exception,
                 errorBody = exception.errorBody,
                 unauthorized = exception.unauthorized
@@ -83,7 +83,7 @@ fun Exception.resolveError(): NetworkState.Error {
         }
         is HttpException -> {
             val exception = NetworkErrorExceptions.parseException(this)
-            return NetworkState.Error(
+            return AppNetworkState.Error(
                 exception = exception,
                 errorBody = exception.errorBody,
                 unauthorized = exception.unauthorized
@@ -91,7 +91,7 @@ fun Exception.resolveError(): NetworkState.Error {
         }
     }
 
-    return NetworkState.Error(
+    return AppNetworkState.Error(
         exception = NetworkErrorExceptions(),
         errorBody = null,
         unauthorized = false

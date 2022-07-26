@@ -21,7 +21,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.R
-import com.sslwireless.androidarch.network.NetworkState
+import com.sslwireless.androidarch.network.AppNetworkState
 import com.sslwireless.androidarch.ui.components.fadeInAnimation
 import com.sslwireless.androidarch.ui.screens.destinations.LoginScreenDestination
 import com.sslwireless.androidarch.ui.theme.DuskBlue
@@ -41,16 +41,15 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
 
     val alphaAnim = fadeInAnimation(startAnimation = startAnimation, timeout = animationTimeout)
 
-
     LaunchedEffect(key1 = true) {
         startAnimation = true
 
-        splashViewModel.getConfigurations().collect {
+        splashViewModel.getResources().collect {
             when (it) {
-                is NetworkState.Loading -> {
+                is AppNetworkState.Loading -> {
                     context.showProgressBar()
                 }
-                is NetworkState.Data -> {
+                is AppNetworkState.Data -> {
                     delay(animationTimeout.toLong())
 
                     context.hideProgressBar()
@@ -58,7 +57,7 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
                     val data = it.data
                     navigator?.let { gotoNextScreen(it) }
                 }
-                is NetworkState.Error -> {
+                is AppNetworkState.Error -> {
                     context.hideProgressBar()
 
                     context.showToast(it.exception.errorMessage ?: "Something went wrong!")

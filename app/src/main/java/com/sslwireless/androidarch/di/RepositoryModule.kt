@@ -1,7 +1,7 @@
 package com.sslwireless.androidarch.di
 
-import com.sslwireless.androidarch.repo.IDonorsRepository
-import com.sslwireless.androidarch.repo.DonorsRepository
+import com.sslwireless.androidarch.repo.donors.IDonorsRepository
+import com.sslwireless.androidarch.repo.donors.DonorsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,23 +1,36 @@
-package com.sslwireless.androidarch.repo
+package com.sslwireless.androidarch.repo.donors
 
 
 import androidx.paging.*
 import com.sslwireless.androidarch.db.RoomHelper
 import com.sslwireless.androidarch.network.IApiService
 import com.sslwireless.androidarch.network.NetworkErrorExceptions
-import com.sslwireless.androidarch.network.NetworkState
+import com.sslwireless.androidarch.network.AppNetworkState
 import com.sslwireless.androidarch.network.convertData
 import com.sslwireless.androidarch.network.data.donors.Donor
 import com.sslwireless.androidarch.network.data.donors.DonorsResponse
+import com.sslwireless.androidarch.network.data.resources.ResourcesResponse
 import com.sslwireless.androidarch.preference.PreferencesHelper
+import com.sslwireless.androidarch.repo.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DonorsRepository @Inject constructor(
-    val apiService: IApiService,
-    val preferencesHelper: PreferencesHelper,
-    val roomHelper: RoomHelper
+    override var apiService: IApiService,
+    override var preferencesHelper: PreferencesHelper,
+    override var roomHelper: RoomHelper
 ) : IDonorsRepository, BaseRepository() {
+    override suspend fun fetchResources(): Flow<AppNetworkState<ResourcesResponse>> {
+        val hashMap = HashMap<String, String>()
+
+        return handleNetworkCall {
+            apiService
+                .getRequest("blood-finder-resources", hashMap)
+                .convertData(ResourcesResponse::class) as ResourcesResponse
+        }
+
+    }
+
     override suspend fun fetchBloodDonors(page: Int, user_name: String): DonorsResponse {
         val hashMap = HashMap<String, String>()
         hashMap["page"] = page.toString()
@@ -35,16 +48,6 @@ class DonorsRepository @Inject constructor(
         }.flow
     }
 
-    override suspend fun fetchConfigurations(): Flow<NetworkState<DonorsResponse>> {
-        val hashMap = HashMap<String, String>()
-
-        return handleNetworkCall {
-            apiService
-                .getRequest("blood-finder", hashMap)
-                .convertData(DonorsResponse::class) as DonorsResponse
-        }
-    }
-
     class DonorSource(var moviesRepo: IDonorsRepository, var user_name: String) :
         PagingSource<Int, Donor>() {
 
@@ -55,7 +58,8 @@ class DonorsRepository @Inject constructor(
         override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Donor> {
             return try {
                 val nextPage = params.key ?: 1
-                val donorsResponse = moviesRepo.fetchBloodDonors(page = nextPage, user_name = user_name)
+                val donorsResponse =
+                    moviesRepo.fetchBloodDonors(page = nextPage, user_name = user_name)
 
                 if (donorsResponse.code != 200) throw NetworkErrorExceptions(
                     errorMessage = donorsResponse.message,

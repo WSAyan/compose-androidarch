@@ -66,5 +66,8 @@ class PreferencesHelper(context: Context) {
         preferencesHelper.edit().remove(key).apply()
     }
 
+    fun destroy(){
+        preferencesHelper.edit().clear().commit()
+    }
 
 }
