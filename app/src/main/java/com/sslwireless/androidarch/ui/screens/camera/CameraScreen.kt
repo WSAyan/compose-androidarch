@@ -34,7 +34,7 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.sslwireless.androidarch.R
 import com.sslwireless.androidarch.ui.data.ImageBody
 import com.sslwireless.androidarch.ui.data.NavigationHeader
-import com.sslwireless.androidarch.ui.theme.NipponCANTheme
+import com.sslwireless.androidarch.ui.theme.ArchTheme
 import com.sslwireless.androidarch.ui.theme.Typography
 import com.sslwireless.androidarch.ui.util.*
 import kotlinx.coroutines.launch
@@ -72,7 +72,7 @@ fun CameraScreen(
             )
         }
     ) {
-        NipponCANTheme {
+        ArchTheme {
             Column(
                 modifier = Modifier
                     .fillMaxSize()

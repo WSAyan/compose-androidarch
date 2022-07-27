@@ -1,9 +1,9 @@
 package com.sslwireless.androidarch.repo
 
 import com.sslwireless.androidarch.db.RoomHelper
+import com.sslwireless.androidarch.network.AppNetworkState
 import com.sslwireless.androidarch.network.IApiService
 import com.sslwireless.androidarch.network.NetworkErrorExceptions
-import com.sslwireless.androidarch.network.AppNetworkState
 import com.sslwireless.androidarch.network.data.BaseResponse
 import com.sslwireless.androidarch.network.data.resources.ResourcesResponse
 import com.sslwireless.androidarch.network.resolveError
@@ -13,8 +13,7 @@ import com.sslwireless.androidarch.util.makeObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-
-abstract class BaseRepository : IBaseRepository{
+abstract class BaseRepository : IBaseRepository {
     abstract var apiService: IApiService
     abstract var preferencesHelper: PreferencesHelper
     abstract var roomHelper: RoomHelper

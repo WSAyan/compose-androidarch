@@ -1,11 +1,8 @@
 package com.sslwireless.androidarch.ui.screens.login
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -30,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.R
+import com.sslwireless.androidarch.ui.components.AppBackground
 import com.sslwireless.androidarch.ui.screens.destinations.DonorsScreenDestination
-import com.sslwireless.androidarch.ui.theme.NipponCANTheme
 import com.sslwireless.androidarch.ui.theme.SlateGrey
 import com.sslwireless.androidarch.ui.theme.Typography
 
@@ -42,11 +39,12 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    NipponCANTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background,
-        ) {
+    AppBackground(
+        backgroundColor = MaterialTheme.colors.background,
+        progressBarContent = {
+
+        },
+        bodyContent = {
             Column(modifier = Modifier.fillMaxSize()) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -181,13 +179,12 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
                 }
 
             }
-
         }
-    }
+    )
 }
 
 @Preview
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen()
+    LoginScreen(navigator = null)
 }

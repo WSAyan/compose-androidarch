@@ -11,26 +11,22 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.sslwireless.androidarch.BuildConfig
-import com.sslwireless.androidarch.ui.components.ProgressBarHandler
 import com.sslwireless.androidarch.ui.screens.NavGraphs
-import com.sslwireless.androidarch.ui.theme.NipponCANTheme
+import com.sslwireless.androidarch.ui.theme.ArchTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val viewModel: MainViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            NipponCANTheme {
+            ArchTheme {
                 window?.statusBarColor = MaterialTheme.colors.primary.toArgb()
 
                 DestinationsNavHost(navGraph = NavGraphs.root)
-
-                ProgressBarHandler(viewModel.showProgressBar)
             }
         }
     }
@@ -44,7 +40,7 @@ fun Greeting(name: String) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    NipponCANTheme {
+    ArchTheme {
         Greeting("Android")
     }
 }

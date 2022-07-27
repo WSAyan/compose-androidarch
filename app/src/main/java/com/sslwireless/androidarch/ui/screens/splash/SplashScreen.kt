@@ -7,6 +7,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,14 +22,18 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.R
-import com.sslwireless.androidarch.network.AppNetworkState
+import com.sslwireless.androidarch.network.data.resources.BloodGroup
+import com.sslwireless.androidarch.network.data.resources.ResourcesResponse
+import com.sslwireless.androidarch.ui.base.UIState
+import com.sslwireless.androidarch.ui.components.AppBackground
+import com.sslwireless.androidarch.ui.components.ProgressBarHandler
 import com.sslwireless.androidarch.ui.components.fadeInAnimation
 import com.sslwireless.androidarch.ui.screens.destinations.LoginScreenDestination
 import com.sslwireless.androidarch.ui.theme.DuskBlue
-import com.sslwireless.androidarch.ui.util.hideProgressBar
-import com.sslwireless.androidarch.ui.util.showProgressBar
+import com.sslwireless.androidarch.ui.util.open
 import com.sslwireless.androidarch.ui.util.showToast
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @RootNavGraph(start = true)
 @Destination
@@ -38,43 +43,67 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
     var startAnimation by remember { mutableStateOf(false) }
     val animationTimeout = 3000
     val context = LocalContext.current
-
     val alphaAnim = fadeInAnimation(startAnimation = startAnimation, timeout = animationTimeout)
 
+    var data: List<BloodGroup>? by remember { mutableStateOf(null) }
+
     LaunchedEffect(key1 = true) {
+        splashViewModel.getResources()
+
         startAnimation = true
 
-        splashViewModel.getResources().collect {
+        splashViewModel.uiState.collect {
             when (it) {
-                is AppNetworkState.Loading -> {
-                    context.showProgressBar()
+                is UIState.Loading -> {
+                    splashViewModel.showProgressBar = true
                 }
-                is AppNetworkState.Data -> {
+                else -> {
                     delay(animationTimeout.toLong())
+                    splashViewModel.showProgressBar = false
 
-                    context.hideProgressBar()
+                    when (it) {
+                        is UIState.DataLoaded -> {
+                            val x = it.data as ResourcesResponse
 
-                    val data = it.data
-                    navigator?.let { gotoNextScreen(it) }
-                }
-                is AppNetworkState.Error -> {
-                    context.hideProgressBar()
+                            data = x.data?.blood_groups
 
-                    context.showToast(it.exception.errorMessage ?: "Something went wrong!")
+                            context.showToast("${data?.size}")
+
+                            navigator?.open<Any>(route = R.id.login, isPopUp = true)
+                        }
+                        is UIState.Error -> {
+                            if (it.unAuthorized) {
+                                splashViewModel.forceLogout(
+                                    navigator = navigator,
+                                    baseRepository = splashViewModel.donorsRepository
+                                )
+                            }
+
+                            context.showToast(it.message)
+                        }
+                        else -> {
+
+                        }
+                    }
+
                 }
             }
         }
+
     }
 
-    Splash(alpha = alphaAnim.value)
+    AppBackground(
+        backgroundColor = if (isSystemInDarkTheme()) Color.Black else DuskBlue,
+        progressBarContent = {
+            ProgressBarHandler(show = splashViewModel.showProgressBar)
+        },
+        bodyContent = {
+            Splash(alpha = alphaAnim.value)
+        }
+    )
+
+
 }
-
-private fun gotoNextScreen(navigator: DestinationsNavigator) {
-    navigator.popBackStack()
-
-    navigator.navigate(LoginScreenDestination())
-}
-
 
 @Composable
 fun Splash(alpha: Float) {

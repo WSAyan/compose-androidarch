@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 
-class PreferencesHelper(context: Context) {
+class PreferencesHelper(val context: Context) {
     private val preferencesHelper: SharedPreferences
     private val sslPref = "local-cache"
 

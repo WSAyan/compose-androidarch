@@ -31,29 +31,6 @@ fun Context.datePicker(onDatePick: (code: String) -> Unit): DatePickerDialog {
     )
 }
 
-fun Context.showProgressBar() = run {
-    try {
-        (this as MainActivity).viewModel.showProgressBar = true
-    } catch (e: Exception) {
-        this.showToast(e.message.toString())
-    }
-}
-
-fun Context.hideProgressBar() = run {
-    try {
-        (this as MainActivity).viewModel.showProgressBar = false
-    } catch (e: Exception) {
-        this.showToast(e.message.toString())
-    }
-}
-
-fun Context.forceLogout() = run {
-    try {
-        (this as MainActivity).viewModel.forceLogout()
-    } catch (e: Exception) {
-        this.showToast(e.message.toString())
-    }
-}
 
 fun Context.changeLanguage(locale: Locale, isActivityRestart: Boolean = true) = run {
     try {

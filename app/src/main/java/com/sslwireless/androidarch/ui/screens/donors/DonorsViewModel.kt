@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class DonorsViewModel @Inject constructor(var donorsRepository: IDonorsRepository) : BaseViewModel() {
+class DonorsViewModel @Inject constructor(var donorsRepository: IDonorsRepository) :
+    BaseViewModel() {
 
     fun getDonors(userName: String): Flow<PagingData<Donor>> =
         donorsRepository.fetchPaginatedDonorsList(userName)

@@ -20,7 +20,7 @@ import com.sslwireless.androidarch.network.NetworkErrorExceptions
 import com.sslwireless.androidarch.network.data.donors.Donor
 import com.sslwireless.androidarch.ui.components.CommonToolbar
 import com.sslwireless.androidarch.ui.components.ListProgressBar
-import com.sslwireless.androidarch.ui.theme.NipponCANTheme
+import com.sslwireless.androidarch.ui.theme.ArchTheme
 import com.sslwireless.androidarch.ui.util.showToast
 
 
@@ -34,7 +34,7 @@ fun DonorsScreen(
     val viewModel: DonorsViewModel = hiltViewModel()
 
 
-    NipponCANTheme {
+    ArchTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background,
