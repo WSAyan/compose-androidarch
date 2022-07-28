@@ -7,7 +7,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,16 +23,14 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.R
 import com.sslwireless.androidarch.network.data.resources.BloodGroup
 import com.sslwireless.androidarch.network.data.resources.ResourcesResponse
+import com.sslwireless.androidarch.ui.base.BaseComponent
 import com.sslwireless.androidarch.ui.base.UIState
-import com.sslwireless.androidarch.ui.components.AppBackground
 import com.sslwireless.androidarch.ui.components.ProgressBarHandler
 import com.sslwireless.androidarch.ui.components.fadeInAnimation
-import com.sslwireless.androidarch.ui.screens.destinations.LoginScreenDestination
 import com.sslwireless.androidarch.ui.theme.DuskBlue
 import com.sslwireless.androidarch.ui.util.open
 import com.sslwireless.androidarch.ui.util.showToast
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @RootNavGraph(start = true)
 @Destination
@@ -48,61 +45,49 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
     var data: List<BloodGroup>? by remember { mutableStateOf(null) }
 
     LaunchedEffect(key1 = true) {
-        splashViewModel.getResources()
-
         startAnimation = true
+
+        delay(animationTimeout.toLong())
+
+        splashViewModel.getResources()
 
         splashViewModel.uiState.collect {
             when (it) {
                 is UIState.Loading -> {
-                    splashViewModel.showProgressBar = true
+
+                }
+                is UIState.DataLoaded -> {
+                    val resourcesResponse = it.data as ResourcesResponse
+
+                    data = resourcesResponse.data?.blood_groups
+
+                    context.showToast("${data?.size}")
+
+                    navigator?.open<Any>(route = R.id.login, isPopUp = true)
+                }
+                is UIState.Error -> {
+                    context.showToast(it.message)
                 }
                 else -> {
-                    delay(animationTimeout.toLong())
-                    splashViewModel.showProgressBar = false
-
-                    when (it) {
-                        is UIState.DataLoaded -> {
-                            val x = it.data as ResourcesResponse
-
-                            data = x.data?.blood_groups
-
-                            context.showToast("${data?.size}")
-
-                            navigator?.open<Any>(route = R.id.login, isPopUp = true)
-                        }
-                        is UIState.Error -> {
-                            if (it.unAuthorized) {
-                                splashViewModel.forceLogout(
-                                    navigator = navigator,
-                                    baseRepository = splashViewModel.donorsRepository
-                                )
-                            }
-
-                            context.showToast(it.message)
-                        }
-                        else -> {
-
-                        }
-                    }
 
                 }
             }
         }
-
     }
 
-    AppBackground(
+    BaseComponent(
         backgroundColor = if (isSystemInDarkTheme()) Color.Black else DuskBlue,
+        progressBarState = splashViewModel.showProgressBar.collectAsState(),
+        unauthorizedState = splashViewModel.unauthorized.collectAsState(),
         progressBarContent = {
-            ProgressBarHandler(show = splashViewModel.showProgressBar)
+            ProgressBarHandler(show = it)
         },
-        bodyContent = {
-            Splash(alpha = alphaAnim.value)
+        unAuthorizedContent = {
+
         }
-    )
-
-
+    ) {
+        Splash(alpha = alphaAnim.value)
+    }
 }
 
 @Composable

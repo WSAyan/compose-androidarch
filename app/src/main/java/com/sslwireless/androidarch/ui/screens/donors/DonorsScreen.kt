@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,8 +19,10 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.network.NetworkErrorExceptions
 import com.sslwireless.androidarch.network.data.donors.Donor
+import com.sslwireless.androidarch.ui.base.BaseComponent
 import com.sslwireless.androidarch.ui.components.CommonToolbar
 import com.sslwireless.androidarch.ui.components.ListProgressBar
+import com.sslwireless.androidarch.ui.components.ProgressBarHandler
 import com.sslwireless.androidarch.ui.theme.ArchTheme
 import com.sslwireless.androidarch.ui.util.showToast
 
@@ -33,8 +36,17 @@ fun DonorsScreen(
 
     val viewModel: DonorsViewModel = hiltViewModel()
 
+    BaseComponent(
+        backgroundColor = MaterialTheme.colors.background,
+        progressBarState = viewModel.showProgressBar.collectAsState(),
+        unauthorizedState = viewModel.unauthorized.collectAsState(),
+        progressBarContent = {
+            ProgressBarHandler(show = it)
+        },
+        unAuthorizedContent = {
 
-    ArchTheme {
+        }
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background,
@@ -90,7 +102,6 @@ fun DonorsScreen(
                 }
             )
         }
-
     }
 }
 
