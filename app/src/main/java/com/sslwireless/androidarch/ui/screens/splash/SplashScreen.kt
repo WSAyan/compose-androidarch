@@ -49,7 +49,7 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
 
         delay(animationTimeout.toLong())
 
-        splashViewModel.getResources()
+        splashViewModel.getResources(R.id.splash_state)
 
         splashViewModel.uiState.collect {
             when (it) {
@@ -57,13 +57,14 @@ fun AnimatedSplashScreen(navigator: DestinationsNavigator? = null) {
 
                 }
                 is UIState.DataLoaded -> {
-                    val resourcesResponse = it.data as ResourcesResponse
+                    when (it.stateId) {
+                        R.id.splash_state -> {
+                            val resourcesResponse = it.data as ResourcesResponse
+                            data = resourcesResponse.data?.blood_groups
 
-                    data = resourcesResponse.data?.blood_groups
-
-                    context.showToast("${data?.size}")
-
-                    navigator?.open<Any>(route = R.id.login, isPopUp = true)
+                            navigator?.open<Any>(route = R.id.login, isPopUp = true)
+                        }
+                    }
                 }
                 is UIState.Error -> {
                     context.showToast(it.message)

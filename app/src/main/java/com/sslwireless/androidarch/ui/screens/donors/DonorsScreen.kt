@@ -3,6 +3,7 @@ package com.sslwireless.androidarch.ui.screens.donors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -20,11 +21,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.network.NetworkErrorExceptions
 import com.sslwireless.androidarch.network.data.donors.Donor
 import com.sslwireless.androidarch.ui.base.BaseComponent
-import com.sslwireless.androidarch.ui.components.CommonToolbar
-import com.sslwireless.androidarch.ui.components.ListProgressBar
-import com.sslwireless.androidarch.ui.components.ProgressBarHandler
+import com.sslwireless.androidarch.ui.components.*
 import com.sslwireless.androidarch.ui.theme.ArchTheme
 import com.sslwireless.androidarch.ui.util.showToast
+import kotlin.coroutines.suspendCoroutine
 
 
 @Destination
@@ -35,6 +35,8 @@ fun DonorsScreen(
     val context = LocalContext.current
 
     val viewModel: DonorsViewModel = hiltViewModel()
+
+    val listState = rememberLazyListState()
 
     BaseComponent(
         backgroundColor = MaterialTheme.colors.background,
@@ -65,14 +67,21 @@ fun DonorsScreen(
                         viewModel.getDonors("").collectAsLazyPagingItems()
 
                     Box(modifier = Modifier.fillMaxSize()) {
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            state = listState
+                        ) {
                             items(donorsItem.itemCount) { index ->
                                 donorsItem[index]?.let {
                                     DonorItemContent(data = it, onItemClicked = {})
                                 }
                             }
                             donorsItem.apply {
-                                when {
+                                this.paginationListHandler(
+                                    context = context,
+                                    listScope = this@LazyColumn
+                                )
+                                /*when {
                                     loadState.refresh is LoadState.Loading -> {
                                         item {
                                             ListProgressBar()
@@ -95,7 +104,7 @@ fun DonorsScreen(
                                                 ?: "Something went wrong!"
                                         )
                                     }
-                                }
+                                }*/
                             }
                         }
                     }

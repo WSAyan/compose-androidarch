@@ -3,6 +3,7 @@ package com.sslwireless.androidarch.ui.components
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,9 +12,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProgressBarHandler(show: Boolean) {
-    Log.wtf("Progress", "------>  ${show}")
-
+fun ProgressBarHandler(show: Boolean, color: Color = MaterialTheme.colors.primary) {
     if (!show) return
 
     Box(
@@ -24,11 +23,11 @@ fun ProgressBarHandler(show: Boolean) {
         CircularProgressIndicator(
             modifier = Modifier
                 .wrapContentHeight()
-                .align(Alignment.Center)
+                .align(Alignment.Center),
+            color = color
         )
     }
 }
-
 
 @Composable
 fun ListProgressBar() {

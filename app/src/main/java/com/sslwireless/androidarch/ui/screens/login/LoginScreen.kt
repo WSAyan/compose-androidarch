@@ -1,5 +1,6 @@
 package com.sslwireless.androidarch.ui.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -38,11 +40,9 @@ import com.sslwireless.androidarch.ui.base.BaseComponent
 import com.sslwireless.androidarch.ui.base.UIState
 import com.sslwireless.androidarch.ui.components.ProgressBarHandler
 import com.sslwireless.androidarch.ui.screens.destinations.DonorsScreenDestination
-import com.sslwireless.androidarch.ui.screens.splash.SplashViewModel
 import com.sslwireless.androidarch.ui.theme.SlateGrey
 import com.sslwireless.androidarch.ui.theme.Typography
 import com.sslwireless.androidarch.ui.util.showToast
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Destination
@@ -55,22 +55,46 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var data: List<BloodGroup>? by remember { mutableStateOf(null) }
+    var stateId: Int? by remember { mutableStateOf(null) }
 
     LaunchedEffect(key1 = true) {
+        loginViewModel.getResources(R.id.login_state_1)
+
         loginViewModel.uiState.collect {
             when (it) {
                 is UIState.Loading -> {
-
+                    stateId = it.stateId
                 }
                 is UIState.DataLoaded -> {
-                    val resourcesResponse = it.data as ResourcesResponse
-                    data = resourcesResponse.data?.blood_groups
+                    when (it.stateId) {
+                        R.id.login_state_submit -> {
+                            val resourcesResponse = it.data as ResourcesResponse
+                            data = resourcesResponse.data?.blood_groups
 
-                    context.showToast("DATA")
+                            navigator?.navigate(direction = DonorsScreenDestination())
+                        }
+                        R.id.login_state_1 -> {
+                            loginViewModel.getResources(R.id.login_state_2)
 
-                    navigator?.navigate(direction = DonorsScreenDestination())
+                            context.showToast("State 1 loaded")
+                        }
+                        R.id.login_state_2 -> {
+                            loginViewModel.getResources(R.id.login_state_3)
+
+                            context.showToast("State 2 loaded")
+                        }
+                        R.id.login_state_3 -> {
+                            val resourcesResponse = it.data as ResourcesResponse
+                            data = resourcesResponse.data?.blood_groups
+
+                            context.showToast("State 3 loaded, Blood Groups size: ${data?.size}")
+                        }
+                    }
                 }
                 is UIState.Error -> {
+                    context.showToast(it.message)
+                }
+                else -> {
 
                 }
             }
@@ -82,7 +106,20 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
         progressBarState = loginViewModel.showProgressBar.collectAsState(),
         unauthorizedState = loginViewModel.unauthorized.collectAsState(),
         progressBarContent = {
-            ProgressBarHandler(show = it)
+            when (stateId) {
+                R.id.login_state_submit -> {
+                    ProgressBarHandler(show = it, color = Color.Green)
+                }
+                R.id.login_state_1 -> {
+                    ProgressBarHandler(show = it, color = Color.Red)
+                }
+                R.id.login_state_2 -> {
+                    ProgressBarHandler(show = it, color = Color.Yellow)
+                }
+                R.id.login_state_3 -> {
+                    ProgressBarHandler(show = it, color = Color.Black)
+                }
+            }
         },
         unAuthorizedContent = {
 
@@ -192,7 +229,7 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
                     ),
                     onClick = {
                         scope.launch {
-                            loginViewModel.getResources()
+                            loginViewModel.getResources(stateId = R.id.login_state_submit)
                         }
                     },
                 ) {
@@ -217,7 +254,6 @@ fun LoginScreen(navigator: DestinationsNavigator? = null) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-
                         },
                     textAlign = TextAlign.Center,
                 )

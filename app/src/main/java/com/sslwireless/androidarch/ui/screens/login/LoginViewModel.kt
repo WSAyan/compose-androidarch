@@ -11,10 +11,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     var donorsRepository: IDonorsRepository
 ) : BaseViewModel() {
-    fun getResources() {
+    fun getResources(stateId: Int) {
         viewModelScope.launch {
             donorsRepository.fetchResources().collect {
-                generateUiState(it)
+                generateUiState(stateId, it)
             }
         }
     }

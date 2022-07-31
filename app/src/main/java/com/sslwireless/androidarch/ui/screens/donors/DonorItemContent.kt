@@ -8,6 +8,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +26,9 @@ import com.sslwireless.androidarch.ui.theme.Typography
 
 @Composable
 fun DonorItemContent(data: Donor? = null, onItemClicked: (item: Donor?) -> Unit) {
+    val name by remember { mutableStateOf(data?.name ?: "N/A") }
+    val desc by remember { mutableStateOf("Age: ${data?.age} years, Gender: ${data?.gender}, Company: ${data?.company_name}") }
+    val bloodGroup by remember { mutableStateOf(data?.blood_group ?: "N/A") }
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -39,7 +45,7 @@ fun DonorItemContent(data: Donor? = null, onItemClicked: (item: Donor?) -> Unit)
             Image(
                 painter = painterResource(id = R.drawable.ic_baseline_person_24),
                 contentDescription = "",
-                Modifier.size(40.dp)
+                modifier = Modifier.size(40.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column(
@@ -49,15 +55,15 @@ fun DonorItemContent(data: Donor? = null, onItemClicked: (item: Donor?) -> Unit)
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = data?.name ?: "N/A",
-                    style = Typography.caption,
+                    text = name,
+                    style = MaterialTheme.typography.caption,
                     color = MaterialTheme.colors.onBackground,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Start,
                     maxLines = 2,
                 )
                 Text(
-                    text = "ID: ${data?.emp_id}, Age: ${data?.age} years, Gender: ${data?.gender}, Company: ${data?.company_name}",
+                    text = desc,
                     color = SlateGrey,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Start,
@@ -66,8 +72,8 @@ fun DonorItemContent(data: Donor? = null, onItemClicked: (item: Donor?) -> Unit)
             }
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = data?.blood_group ?: "N/A",
-                style = Typography.h1,
+                text = bloodGroup,
+                style = MaterialTheme.typography.h1,
                 color = Color.Red,
                 textAlign = TextAlign.End,
             )

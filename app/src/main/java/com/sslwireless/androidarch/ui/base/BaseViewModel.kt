@@ -31,17 +31,17 @@ abstract class BaseViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<UIState<Any>?> = MutableStateFlow(null)
     val uiState: StateFlow<UIState<Any>?> = _uiState
 
-    protected fun <T : Any> generateUiState(state: AppNetworkState<T>) {
+    protected fun <T : Any> generateUiState(stateId: Int, state: AppNetworkState<T>) {
         when (state) {
             is AppNetworkState.Loading -> {
-                _uiState.value = UIState.Loading
+                _uiState.value = UIState.Loading(stateId = stateId)
 
                 _showProgressBar.value = true
 
                 _unauthorized.value = false
             }
             is AppNetworkState.Data -> {
-                _uiState.value = UIState.DataLoaded(state.data)
+                _uiState.value = UIState.DataLoaded(stateId = stateId, data = state.data)
 
                 _showProgressBar.value = false
 
@@ -49,7 +49,11 @@ abstract class BaseViewModel : ViewModel() {
             }
             is AppNetworkState.Error -> {
                 _uiState.value =
-                    UIState.Error(state.exception.errorMessage ?: "", state.unauthorized)
+                    UIState.Error(
+                        stateId = stateId,
+                        message = state.exception.errorMessage ?: "",
+                        unAuthorized = state.unauthorized
+                    )
 
                 _showProgressBar.value = false
 
@@ -69,11 +73,11 @@ abstract class BaseViewModel : ViewModel() {
 }
 
 sealed class UIState<out T> {
-    data class DataLoaded<out T>(val data: T) : UIState<T>()
+    data class DataLoaded<out T>(val stateId: Int, val data: T) : UIState<T>()
 
-    object Loading : UIState<Nothing>()
+    data class Loading(val stateId: Int) : UIState<Nothing>()
 
-    data class Error(var message: String, var unAuthorized: Boolean = false) :
+    data class Error(val stateId: Int, var message: String, var unAuthorized: Boolean = false) :
         UIState<Nothing>()
 
 }
