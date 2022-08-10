@@ -14,18 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.sslwireless.androidarch.network.NetworkErrorExceptions
 import com.sslwireless.androidarch.network.data.donors.Donor
 import com.sslwireless.androidarch.ui.base.BaseComponent
 import com.sslwireless.androidarch.ui.components.*
-import com.sslwireless.androidarch.ui.theme.ArchTheme
-import com.sslwireless.androidarch.ui.util.showToast
-import kotlin.coroutines.suspendCoroutine
 
 
 @Destination
@@ -64,50 +60,26 @@ fun DonorsScreen(
                     )
                 },
                 content = {
-                    val donorsItem: LazyPagingItems<Donor> =
+                    val donors: LazyPagingItems<Donor> =
                         viewModel.getDonors("").collectAsLazyPagingItems()
 
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it)
+                    ) {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             state = listState
                         ) {
-                            items(donorsItem.itemCount) { index ->
-                                donorsItem[index]?.let {
-                                    DonorItemContent(data = it, onItemClicked = {})
-                                }
+                            items(items = donors, key = { donor -> donor.id ?: -1 }) { donor ->
+                                DonorItemContent(data = donor, onItemClicked = {})
                             }
-                            donorsItem.apply {
+                            donors.apply {
                                 this.paginationListHandler(
                                     context = context,
                                     listScope = this@LazyColumn
                                 )
-                                /*when {
-                                    loadState.refresh is LoadState.Loading -> {
-                                        item {
-                                            ListProgressBar()
-                                        }
-                                    }
-                                    loadState.append is LoadState.Loading -> {
-                                        item {
-                                            ListProgressBar()
-                                        }
-                                    }
-                                    loadState.refresh is LoadState.Error -> {
-                                        context.showToast(
-                                            ((loadState.append as LoadState.Error).error as NetworkErrorExceptions).errorMessage
-                                                ?: "Something went wrong!"
-                                        )
-                                    }
-                                    loadState.append is LoadState.Error -> {
-                                        context.showToast(
-                                            ((loadState.append as LoadState.Error).error as NetworkErrorExceptions).errorMessage
-                                                ?: "Something went wrong!"
-                                        )
-                                    }
-                                }*/
                             }
                         }
                     }

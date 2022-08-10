@@ -1,6 +1,7 @@
 package com.sslwireless.androidarch.ui.components
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -69,13 +70,13 @@ fun <T : Any> LazyPagingItems<T>.paginationListHandler(context: Context, listSco
         }
         loadState.refresh is LoadState.Error -> {
             context.showToast(
-                ((loadState.append as LoadState.Error).error as NetworkErrorExceptions).errorMessage
+                ((loadState.append as LoadState.Error).error as NetworkErrorExceptions).message
                     ?: "Something went wrong!"
             )
         }
         loadState.append is LoadState.Error -> {
             context.showToast(
-                ((loadState.append as LoadState.Error).error as NetworkErrorExceptions).errorMessage
+                ((loadState.append as LoadState.Error).error as NetworkErrorExceptions).message
                     ?: "Something went wrong!"
             )
         }

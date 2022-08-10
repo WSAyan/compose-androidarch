@@ -66,14 +66,19 @@ class DonorsRepository @Inject constructor(
                     unauthorized = donorsResponse.code == 401
                 )
 
-                val list = donorsResponse.data?.data ?: throw NetworkErrorExceptions(
-                    errorMessage = donorsResponse.message
-                )
+                val list = donorsResponse.data?.data ?: emptyList()
+                val lastPage = donorsResponse.data?.last_page
 
                 LoadResult.Page(
                     data = list,
                     prevKey = if (nextPage == 1) null else nextPage - 1,
-                    nextKey = if (list.isEmpty()) null else nextPage.plus(1)
+                    nextKey = if (list.isEmpty()) {
+                        null
+                    } else if (nextPage == lastPage) {
+                        null
+                    } else {
+                        nextPage.plus(1)
+                    }
                 )
             } catch (exception: NetworkErrorExceptions) {
                 exception.printStackTrace()

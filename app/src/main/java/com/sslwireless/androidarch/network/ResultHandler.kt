@@ -58,7 +58,7 @@ open class NetworkErrorExceptions(
 fun Exception.resolveError(): AppNetworkState.Error {
     when (this) {
         is SocketTimeoutException -> {
-            val exception = NetworkErrorExceptions(errorMessage = "connection error!")
+            val exception = NetworkErrorExceptions(errorMessage = "connection timeout!")
             return AppNetworkState.Error(
                 exception = exception,
                 errorBody = exception.errorBody,
@@ -66,7 +66,7 @@ fun Exception.resolveError(): AppNetworkState.Error {
             )
         }
         is ConnectException -> {
-            val exception = NetworkErrorExceptions(errorMessage = "no internet access!")
+            val exception = NetworkErrorExceptions(errorMessage = "internet connection failed!")
             return AppNetworkState.Error(
                 exception = exception,
                 errorBody = exception.errorBody,
@@ -74,7 +74,7 @@ fun Exception.resolveError(): AppNetworkState.Error {
             )
         }
         is UnknownHostException -> {
-            val exception = NetworkErrorExceptions(errorMessage = "no internet access!")
+            val exception = NetworkErrorExceptions(errorMessage = "host not found!")
             return AppNetworkState.Error(
                 exception = exception,
                 errorBody = exception.errorBody,
