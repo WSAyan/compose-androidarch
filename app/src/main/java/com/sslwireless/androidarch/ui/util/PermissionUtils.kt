@@ -8,28 +8,31 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
-import com.google.accompanist.permissions.rememberPermissionState
+import androidx.compose.ui.res.stringResource
+import com.google.accompanist.permissions.PermissionsRequired
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.sslwireless.androidarch.R
 
-@ExperimentalPermissionsApi
 @Composable
 fun Permission(
-    permission: String,
+    permissions: List<String>,
     rationale: String = "This permission is important for this app. Please grant the permission.",
     permissionNotAvailableContent: @Composable () -> Unit = { },
     content: @Composable () -> Unit = { }
 ) {
-    val permissionState = rememberPermissionState(permission)
-    PermissionRequired(
-        permissionState = permissionState,
-        permissionNotGrantedContent = {
+    val permissionsState = rememberMultiplePermissionsState(permissions)
+
+    PermissionsRequired(
+        multiplePermissionsState = permissionsState,
+        permissionsNotGrantedContent = {
             Rationale(
                 text = rationale,
-                onRequestPermission = { permissionState.launchPermissionRequest() }
+                onRequestPermission = {
+                    permissionsState.launchMultiplePermissionRequest()
+                }
             )
         },
-        permissionNotAvailableContent = permissionNotAvailableContent,
+        permissionsNotAvailableContent = permissionNotAvailableContent,
         content = content
     )
 }
@@ -42,14 +45,14 @@ private fun Rationale(
     AlertDialog(
         onDismissRequest = { },
         title = {
-            Text(text = "Permission request")
+            Text(text = stringResource(R.string.reasons_for_permission_request))
         },
         text = {
             Text(text)
         },
         confirmButton = {
             Button(onClick = onRequestPermission) {
-                Text("Ok")
+                Text(stringResource(R.string.ok))
             }
         }
     )
@@ -60,7 +63,7 @@ fun OpenSettingsPermissionDialog(text: String, context: Context) {
     AlertDialog(
         onDismissRequest = { },
         title = {
-            Text(text = "Open Settings")
+            Text(text = stringResource(R.string.open_settings))
         },
         text = {
             Text(text)

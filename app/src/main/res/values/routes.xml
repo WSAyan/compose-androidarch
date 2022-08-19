@@ -4,4 +4,5 @@
     <item type="id" name="donors" />
     <item type="id" name="splash" />
     <item type="id" name="donor_details" />
+    <item type="id" name="camera" />
 </resources>
