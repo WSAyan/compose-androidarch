@@ -12,6 +12,7 @@ A sample app with MVVM project structure
 - Splash screen with initial demo api call
 - Login Screen with multiple api call
 - Paginated blood donors list
+- Custom Camera Screen
 
 #### Project structure contains:
 
@@ -21,4 +22,6 @@ A sample app with MVVM project structure
 - SharedPreference boilerplate
 - Hilt for dependency injection
 - Firebase push notification boilerplate
+- CameraX api implementation example
+- Permission handling
 - Workmanager boilerplate
