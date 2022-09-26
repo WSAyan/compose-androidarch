@@ -2,7 +2,10 @@ package com.sslwireless.androidarch.ui.util
 
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.sslwireless.androidarch.R
+import com.sslwireless.androidarch.ui.data.NavigationHeader
+import com.sslwireless.androidarch.ui.screens.camera.CameraScreen
 import com.sslwireless.androidarch.ui.screens.destinations.AnimatedSplashScreenDestination
+import com.sslwireless.androidarch.ui.screens.destinations.CameraScreenDestination
 import com.sslwireless.androidarch.ui.screens.destinations.DonorsScreenDestination
 import com.sslwireless.androidarch.ui.screens.destinations.LoginScreenDestination
 
@@ -26,6 +29,10 @@ fun <T> DestinationsNavigator.open(
             }
             R.id.donor_details -> {
                 this.navigate(direction = DonorsScreenDestination())
+            }
+            R.id.camera -> {
+                val data = data as NavigationHeader
+                this.navigate(direction = CameraScreenDestination(data, false))
             }
         }
     } catch (exception: Exception) {

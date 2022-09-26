@@ -8,4 +8,10 @@
 
     <string name="clear_all">Clear All</string>
     <string name="notification">Notification</string>
+    <string name="reasons_for_permission_request">Permissions are necceasary for the app</string>
+    <string name="ok">ok</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="tap_to_capture_photo">Tap to capture photo</string>
+    <string name="camera_permission_rationale">Camera permission needed for capturing photos</string>
+    <string name="please_enable_camera_permission">Please enable camera permission</string>
 </resources>
