@@ -1,6 +1,24 @@
-# Jetpack Compose MVVM Structure 
 
-Add api key in **local.properties** file
-```
-api_key="your_api_key"
-```
+# Jetpack Compose MVVM Structure
+
+A sample app with MVVM project structure
+
+## Run Instructions
+- Ask team lead for the api key.
+- Add the api key in
+  **local.properties** file   ```   api_key="given_api_key"   ```
+
+#### The app contains
+- Splash screen with initial demo api call
+- Login Screen with multiple api call
+- Paginated blood donors list
+
+#### Project structure contains:
+
+- Jetpack compose
+- Network call boilerplate
+- RoomDB boilerplate
+- SharedPreference boilerplate
+- Hilt for dependency injection
+- Firebase push notification boilerplate
+- Workmanager boilerplate

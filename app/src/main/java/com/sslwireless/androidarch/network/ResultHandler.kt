@@ -35,13 +35,13 @@ open class NetworkErrorExceptions(
     companion object {
         fun parseException(exception: HttpException): NetworkErrorExceptions {
             return try {
-                val errorBody =
+                val errorBody: BaseResponse? =
                     exception.response()?.errorBody()
-                        ?.convertBody(BaseResponse::class) as BaseResponse
+                        ?.convertBody()
 
                 NetworkErrorExceptions(
                     errorCode = exception.code(),
-                    errorMessage = errorBody.status_message ?: "request failed",
+                    errorMessage = errorBody?.status_message ?: "request failed",
                     errorBody = errorBody,
                     unauthorized = exception.code() == 401 // unauthorized true if 401
                 )
@@ -98,21 +98,21 @@ fun Exception.resolveError(): AppNetworkState.Error {
     )
 }
 
-fun <T : Any> Response<ResponseBody>.convertData(classType: KClass<T>): Any {
+inline fun <reified T : Any> Response<ResponseBody>.convertData(): T {
     val body = if (this.isSuccessful) {
         this.body()?.string()
     } else throw HttpException(this)
 
     return GsonBuilder().serializeNulls().create().fromJson(
         body,
-        classType.java
+        T::class.java
     )
 }
 
-fun <T : Any> ResponseBody.convertBody(classType: KClass<T>): Any {
+inline fun <reified T : Any> ResponseBody.convertBody(): T {
     return GsonBuilder().serializeNulls().create().fromJson(
         this.string(),
-        classType.java
+        T::class.java
     )
 }
 

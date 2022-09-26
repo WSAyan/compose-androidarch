@@ -26,7 +26,7 @@ class DonorsRepository @Inject constructor(
         return handleNetworkCall {
             apiService
                 .getRequest("blood-finder-resources", hashMap)
-                .convertData(ResourcesResponse::class) as ResourcesResponse
+                .convertData()
         }
 
     }
@@ -38,7 +38,7 @@ class DonorsRepository @Inject constructor(
 
         return apiService
             .getRequest("blood-finder", hashMap)
-            .convertData(DonorsResponse::class) as DonorsResponse
+            .convertData()
     }
 
 

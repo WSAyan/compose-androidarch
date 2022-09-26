@@ -10,9 +10,9 @@ fun <T> T.makeJson(isPretty: Boolean = false): String {
         GsonBuilder().serializeNulls().create().toJson(this)
 }
 
-fun <T : Any> String.makeObject(classType: KClass<T>): Any {
+inline fun <reified T : Any> String.makeObject(): T {
     return GsonBuilder().serializeNulls().create().fromJson(
         this,
-        classType.java
+        T::class.java
     )
 }

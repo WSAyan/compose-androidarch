@@ -63,5 +63,5 @@ abstract class BaseRepository : IBaseRepository {
     }
 
     override fun getCachedResources(): ResourcesResponse =
-        preferencesHelper["resources", ""].makeObject(ResourcesResponse::class) as ResourcesResponse
+        preferencesHelper["resources", ""].makeObject()
 }
