@@ -3,8 +3,7 @@
 
 A sample app with MVVM project structure
 
-## Run Instructions
-- Ask team lead for the api key.
+## Build Instructions
 - Add the api key in
   **local.properties** file   ```   api_key="given_api_key"   ```
 
